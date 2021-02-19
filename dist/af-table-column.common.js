@@ -2657,9 +2657,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     values: function values() {
       var _this = this;
       var data = this.$parent.data || [];
-      return data.map(function (item) {
-        return item[_this.$attrs.prop];
-      });
+      if(data.length == 0){
+          return data.map(function (item) {
+          return item[_this.$attrs.prop];
+        });
+      }
     },
     // 是否自适应列宽, 默认是
     isFit: function isFit() {
