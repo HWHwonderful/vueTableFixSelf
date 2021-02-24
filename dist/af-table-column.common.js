@@ -2657,11 +2657,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     values: function values() {
       var _this = this;
       var data = this.$parent.data || [];
-      if(data.length == 0){
-          return data.map(function (item) {
-          return item[_this.$attrs.prop];
-        });
-      }
+      return data.map(function (item) {
+        return item[_this.$attrs.prop];
+      });
     },
     // 是否自适应列宽, 默认是
     isFit: function isFit() {
@@ -2693,33 +2691,36 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
   watch: {
     values: {
       immediate: true,
-      handler: function handler(val) {
-        var _this2 = this;
-        if (_this2.$scopedSlots.default) {
+      handler: function handler(val,newVal) {
+        var _bool = JSON.stringify(val) == JSON.stringify(newVal);
+        if(!_bool){
+          var _this2 = this;
+          if (_this2.$scopedSlots.default) {
           // 存在自定义节点
-          setTimeout(function () {
-            // 首次获取不到子节点, setTimeout才行
-            // 可能存在贴边列, 需要使用包含 fixed 的类名
-            var bodyWrapper = _this2.$attrs.fixed ? document.querySelector(".el-table__fixed".concat(_this2.$attrs.fixed === 'right' ? "-".concat(_this2.$attrs.fixed) : '')).querySelector('.el-table__fixed-body-wrapper') : document.querySelector('.el-table__body-wrapper');
-            var nodes = bodyWrapper.querySelectorAll(".".concat(_this2.$attrs.prop || "encode-".concat(_this2.transChar(_this2.$attrs.label)), "-column"));
+            setTimeout(function () {
+              // 首次获取不到子节点, setTimeout才行
+              // 可能存在贴边列, 需要使用包含 fixed 的类名
+              var bodyWrapper = _this2.$attrs.fixed ? document.querySelector(".el-table__fixed".concat(_this2.$attrs.fixed === 'right' ? "-".concat(_this2.$attrs.fixed) : '')).querySelector('.el-table__fixed-body-wrapper') : document.querySelector('.el-table__body-wrapper');
+              var nodes = bodyWrapper.querySelectorAll(".".concat(_this2.$attrs.prop || "encode-".concat(_this2.transChar(_this2.$attrs.label)), "-column"));
 
-            if (nodes.length) {
-              // 有可能会来不及获取nodes, 就切换菜单进入下一页了, 再研究吧
-              var target = [];
-              var getComputedWidths = [];
-              Array.from(nodes).map(function (item) {
-                target.push(item.innerText); // 有可能存在自定义列内容超出容器, 取 scrollWidth 才行
+              if (nodes.length) {
+                // 有可能会来不及获取nodes, 就切换菜单进入下一页了, 再研究吧
+                var target = [];
+                var getComputedWidths = [];
+                Array.from(nodes).map(function (item) {
+                  target.push(item.innerText); // 有可能存在自定义列内容超出容器, 取 scrollWidth 才行
 
-                getComputedWidths.push(item.querySelector('.cell').scrollWidth);
-              });
-              _this2.getComputedWidth = Math.max.apply(Math, getComputedWidths);
+                  getComputedWidths.push(item.querySelector('.cell').scrollWidth);
+                });
+                _this2.getComputedWidth = Math.max.apply(Math, getComputedWidths);
 
-              _this2.$set(_this2, 'minLength', _this2.getMaxLength(target));
-            }
+                _this2.$set(_this2, 'minLength', _this2.getMaxLength(target));
+              }
 
-          }, 0);
-        } else {
-          _this2.$set(_this2, 'minLength', _this2.getMaxLength(val));
+            }, 0);
+          } else {
+            _this2.$set(_this2, 'minLength', _this2.getMaxLength(val));
+          }
         }
       }
     }
