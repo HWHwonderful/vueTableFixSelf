@@ -2498,7 +2498,7 @@ if (typeof window !== 'undefined') {
   }
 
   var setPublicPath_i
-  if ((setPublicPath_i = window.document.currentScript) && (setPublicPath_i = setPublicPath_i.src.match(/(.+\/)[^/]+\.js(\?.*)?$/))) {
+  if ((setPublicPath_i = document.scripts) && (setPublicPath_i = setPublicPath_i[document.scripts.length - 1].src.match(/(.+\/)[^/]+\.js(\?.*)?$/))) {
     __webpack_require__.p = setPublicPath_i[1] // eslint-disable-line
   }
 }
